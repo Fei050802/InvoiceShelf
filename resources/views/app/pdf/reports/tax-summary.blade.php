@@ -110,9 +110,10 @@
         .report-footer {
             width: 100%;
             margin-top: 40px;
-            padding: 15px 20px;
+            padding: 20px 25px;
             background: #F9FBFF;
             box-sizing: border-box;
+            border-radius: 8px;
         }
 
         .report-footer-label {
