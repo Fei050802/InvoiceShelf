@@ -152,6 +152,6 @@ Route::get('/login', function () {
 
 Route::get('/test-sample', function () {
     return response()->json([
-        'message' => 'Test sample successful'
+        'message' => 'Test sample successful',
     ]);
 });
