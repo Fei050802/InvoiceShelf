@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
 <head>
+    <style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        }
+    </style>
     <meta charset="utf-8">
     <title>{{ get_page_title(!Request::header('company')) }}</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
