@@ -33,8 +33,9 @@
         .header-container {
             /* position: absolute; */
             width: 100%;
-            padding: 0 30px;
-            margin-bottom: 50px;
+            padding: 20px 30px;
+            margin-bottom: 80px;
+            background-color: #fcfcfc;
             /* height: 150px;
             left: 0px;
             top: -60px; */
@@ -51,8 +52,9 @@
         .header-logo {
             /* position: absolute; */
             text-transform: capitalize;
-            color: #7675ff;
+            color: #ff5722;
             padding-top: 0px;
+            font-weight: bold;
         }
 
         .company-address-container {
