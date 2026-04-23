@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: invoiceshelf_app
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      APP_NAME: InvoiceShelf
+      APP_ENV: staging
+      APP_DEBUG: false
+      APP_URL: http://localhost:8080
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: invoiceshelf
+      DB_USERNAME: invoiceshelf_user
+      DB_PASSWORD: invoiceshelf_pass
+    depends_on:
+      - db
+    volumes:
+      - app_storage:/var/www/html/storage
+
+  db:
+    image: mysql:8.0
+    container_name: invoiceshelf_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: invoiceshelf
+      MYSQL_USER: invoiceshelf_user
+      MYSQL_PASSWORD: invoiceshelf_pass
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: invoiceshelf_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root_password
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+  app_storage:

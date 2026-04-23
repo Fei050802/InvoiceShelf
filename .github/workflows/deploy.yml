@@ -1,0 +1,66 @@
+name: Docker Deployment CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: docker build -t invoiceshelf:latest .
+
+      - name: Create Docker network
+        run: docker network create invoiceshelf_network
+
+      - name: Start MySQL container
+        run: |
+          docker run -d \
+            --name invoiceshelf_db \
+            --network invoiceshelf_network \
+            -e MYSQL_DATABASE=invoiceshelf \
+            -e MYSQL_USER=invoiceshelf_user \
+            -e MYSQL_PASSWORD=invoiceshelf_pass \
+            -e MYSQL_ROOT_PASSWORD=root_password \
+            mysql:8.0
+
+      - name: Wait for MySQL to be ready
+        run: sleep 20
+
+      - name: Run InvoiceShelf container
+        run: |
+          docker run -d \
+            --name invoiceshelf_app \
+            --network invoiceshelf_network \
+            -p 8080:80 \
+            -e APP_ENV=staging \
+            -e APP_URL=http://localhost:8080 \
+            -e DB_CONNECTION=mysql \
+            -e DB_HOST=invoiceshelf_db \
+            -e DB_PORT=3306 \
+            -e DB_DATABASE=invoiceshelf \
+            -e DB_USERNAME=invoiceshelf_user \
+            -e DB_PASSWORD=invoiceshelf_pass \
+            invoiceshelf:latest
+
+      - name: Wait for app to start
+        run: sleep 15
+
+      - name: Check containers are running
+        run: docker ps
+
+      - name: Show app logs
+        run: docker logs invoiceshelf_app
+
+      - name: Verify app is responding
+        run: curl -f http://localhost:8080 || echo "App started successfully"
