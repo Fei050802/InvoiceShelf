@@ -149,3 +149,9 @@ Route::get('/forgot-password', function () {
 Route::get('/login', function () {
     return view('app');
 })->where('vue', '[\/\w\.-]*')->name('login')->middleware(['install', 'guest']);
+
+Route::get('/test-sample', function () {
+    return response()->json([
+        'message' => 'Test sample successful'
+    ]);
+});
